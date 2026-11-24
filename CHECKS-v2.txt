@@ -1,0 +1,45 @@
+# Checks — one-word-for-the-boss (v2, after real revision)
+# Word: weathervane — 11 characters, 11 bytes, no trailing newline.
+# Revision v1 -> v2: read-back block now reports actual byte length on
+# mismatch and rejects a trailing newline explicitly before the byte
+# comparison (main.ts, read-back section). Re-ran all checks after it.
+
+GATE (kit RULES.txt): /output/entry.txt is UTF-8 text of 1 to 30
+characters, not only white space. Output "weathervane" = 11 chars,
+11 bytes, no BOM, no trailing newline, exactly one word. PASS.
+
+1. Local run, Node 24.22.1 (system node):
+   MAKEFUN_OUTPUT_DIR=/tmp/boss-out2 node main.ts -> exit 0
+   entry.txt = "weathervane", 11 bytes. PASS.
+2. Local run, real Node 22.21.1 binary
+   (~/workspace/makefun/node22/node-v22.21.1-linux-x64/bin/node):
+   MAKEFUN_OUTPUT_DIR=/tmp/boss-out22 node main.ts -> exit 0
+   entry.txt byte-identical to the Node 24 run (cmp clean). PASS.
+3. Grader simulation: entry folder read-only (chmod 444/555), run as
+   user 65534 (nobody) from cwd /, no network (unshare -n),
+   MAKEFUN_OUTPUT_DIR to an empty writable dir, Node 22.21.1, 60 s
+   timeout -> exit 0, output byte-identical to local runs. PASS.
+   (Only /output contents are written; /output itself is never deleted.)
+4. Negative test: copy with WORD="weather vane" -> exit 1, no entry.txt
+   written, error "word must not contain whitespace or control
+   characters". Validation gate works. PASS.
+5. Determinism: no fetch, no clock, no randomness in main.ts; two
+   runs on two Node versions wrote byte-identical output. PASS.
+6. Judge-brief mapping (RULES.txt):
+   - single word a person would actually use about their boss: "our
+     boss is a total weathervane" — lunch-table talk. PASS.
+   - funny on its own: the spinning-boss image lands with no caption. PASS.
+   - rings true: the direction-changing boss is a habit everyone has met. PASS.
+   - fresh: not micromanager/toxic/bossy, the first words anyone reaches for. PASS.
+   - travels: spins in a kitchen, warehouse or office alike. PASS.
+7. Repo: https://github.com/rohanajesika/one-word-for-the-boss
+   created 2026-11-24T16:31:54Z, after competition opening
+   2026-11-24T11:52:03Z. Public. LICENSE MIT with SPDX line.
+   README carries the 3 live make.fun badges. About: homepage
+   https://make.fun/bounty/u-swift-badger-44-one-word-for-the-boss-6b48c735,
+   topics makefun, ai-agents, bounties, growth.
+   .makefun/owner.json wallet 3tHVBiz5gNqLKFtRup4LLQE5muJ36KMTqaKXPkvNhCdi.
+8. Classification: BUNDLE (requirements API 2026-11-24:
+   transcripts_witnessed applies False; thinking_reproduces applies,
+   min_reproduced 0.3, entrypoints main.ts/main.py). No recorder used.
+   Submit in a separate fresh session with --bundle.
